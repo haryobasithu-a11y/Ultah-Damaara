@@ -153,6 +153,48 @@
   .last .sign{font-family:var(--sans);font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;color:#9c8d76;margin-top:16px}
   .last .ps{margin-top:24px;padding-top:16px;border-top:1px dashed rgba(107,97,86,.35);font-family:var(--serif);font-style:italic;font-size:.95rem;color:#6a5f51;line-height:1.65;max-width:44ch}
 
+  /* ================= OPENING: TIRAI BUKA ================= */
+  .curtain{position:fixed;inset:0;z-index:96;pointer-events:none;overflow:hidden}
+  .c-half{position:absolute;top:0;bottom:0;width:50.4%;
+    background:
+      radial-gradient(600px 400px at 50% 45%, #241a22 0%, rgba(20,16,16,0) 70%),
+      linear-gradient(160deg,#1a1416,#130f10 60%,#0d0a0b);
+    transform:translateX(0);will-change:transform}
+  .c-l{left:0}
+  .c-r{right:0}
+  .c-seam{position:absolute;left:calc(50% - .5px);top:0;bottom:0;width:1px;z-index:1;
+    background:linear-gradient(180deg,transparent 6%,rgba(232,201,138,.5) 38%,rgba(232,201,138,.5) 62%,transparent 94%);
+    -webkit-mask-image:linear-gradient(180deg,#000 0 32%,rgba(0,0,0,.12) 46%,rgba(0,0,0,.12) 56%,#000 70% 100%);
+    mask-image:linear-gradient(180deg,#000 0 32%,rgba(0,0,0,.12) 46%,rgba(0,0,0,.12) 56%,#000 70% 100%);
+    transition:opacity .5s ease}
+  .curtain.open .c-seam{opacity:0}
+  .c-half::before{content:"";position:absolute;inset:0;background-image:var(--noise);background-size:220px;opacity:.16;mix-blend-mode:overlay}
+
+  .curtain.open .c-l{transform:translateX(-101%);transition:transform 1.05s cubic-bezier(.76,0,.24,1) .2s}
+  .curtain.open .c-r{transform:translateX(101%);transition:transform 1.05s cubic-bezier(.76,0,.24,1) .2s}
+  .curtain.done{display:none}
+
+  .c-core{position:absolute;inset:0;z-index:5;display:grid;place-content:center;justify-items:center;gap:16px;text-align:center;padding:24px;
+    transition:opacity .3s ease,transform .5s cubic-bezier(.16,1,.3,1)}
+  .c-core::before{content:"";position:absolute;left:50%;top:50%;width:min(600px,90vw);height:340px;transform:translate(-50%,-50%);
+    background:radial-gradient(closest-side,rgba(19,15,16,.92),rgba(19,15,16,.55) 58%,transparent 80%);pointer-events:none;z-index:-1}
+  .curtain.open .c-core{opacity:0;transform:scale(.96) translateY(-6px)}
+
+  .c-mark{width:56px;height:56px;border-radius:50%;border:1px solid rgba(232,201,138,.5);display:grid;place-items:center;
+    box-shadow:0 0 0 6px rgba(232,201,138,.06),0 0 40px rgba(232,201,138,.18);animation:cmark 2.4s ease-in-out infinite alternate}
+  .c-mark svg{width:26px;height:26px;fill:#e8c98a;opacity:.92;transform:translateX(1px)}
+  @keyframes cmark{from{box-shadow:0 0 0 6px rgba(232,201,138,.04),0 0 30px rgba(232,201,138,.12)}to{box-shadow:0 0 0 9px rgba(232,201,138,.02),0 0 54px rgba(232,201,138,.26)}}
+
+  .c-kick{font-family:var(--sans);font-size:.5rem;letter-spacing:.52em;text-transform:uppercase;color:rgba(232,201,138,.72);margin:4px 0 0}
+  .c-word{font-family:var(--serif);font-weight:500;font-size:clamp(1.7rem,5.4vw,2.5rem);line-height:1.05;letter-spacing:-.01em;color:#f6ecd9;margin:0}
+  .c-word em{font-style:italic;color:#e8c98a}
+
+  .c-bar{display:block;width:132px;height:2px;margin-top:6px;border-radius:2px;background:rgba(246,236,217,.14);overflow:hidden}
+  .c-bar i{display:block;height:100%;width:0;border-radius:2px;
+    background:linear-gradient(90deg,rgba(232,201,138,.35),#f0d9a6);
+    animation:cbar 1.15s cubic-bezier(.4,0,.2,1) .12s forwards}
+  @keyframes cbar{to{width:100%}}
+
   /* ================= INTRO: KUE ================= */
   body.locked{overflow:hidden}
 
@@ -297,11 +339,26 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
     .js .page{opacity:1;translate:none}
+    .curtain{display:none}
   }
 </style>
 </head>
 <body>
 <div class="desk-noise" aria-hidden="true"></div>
+
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="c-half c-l"></div>
+  <div class="c-half c-r"></div>
+  <span class="c-seam"></span>
+  <div class="c-core">
+    <div class="c-mark">
+      <svg viewBox="0 0 100 100"><path d="M6 18 L97 50 L6 82 L29 50 Z"/></svg>
+    </div>
+    <p class="c-kick">Buku Perjalanan</p>
+    <p class="c-word">Perjalanan <em>Kita</em></p>
+    <span class="c-bar"><i></i></span>
+  </div>
+</div>
 
 <main class="journal">
 
@@ -634,6 +691,19 @@
 <script>
 (function () {
   document.body.classList.add('js');
+
+  /* ---------- tirai pembuka ---------- */
+  var curtain = document.getElementById('curtain');
+  var straightToBook = location.hash === '#buku';
+
+  if (curtain) {
+    if (straightToBook) {
+      curtain.classList.add('done');
+    } else {
+      window.setTimeout(function () { curtain.classList.add('open'); }, 1250);
+      window.setTimeout(function () { curtain.classList.add('done'); }, 2760);
+    }
+  }
 
   var pages = document.querySelectorAll('.page');
   var revealed = false;
