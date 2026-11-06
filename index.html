@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Perjalanan Kita — untuk Damaraa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Caveat:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --paper:#f7f0e3;
+    --paper-2:#f2e8d6;
+    --ink:#2b2620;
+    --ink-soft:#6b6156;
+    --forest:#2f4437;
+    --terra:#b0603c;
+    --gold:#bd9243;
+    --desk:#1b1714;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --hand:'Caveat',cursive;
+    --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+  }
+
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 12% -8%, #3a2b22 0%, transparent 62%),
+      radial-gradient(900px 700px at 92% 8%, #2c3128 0%, transparent 58%),
+      radial-gradient(1000px 900px at 50% 108%, #40291f 0%, transparent 62%),
+      var(--desk);
+    padding:clamp(22px,5vw,72px) clamp(12px,4vw,32px) clamp(70px,10vw,140px);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  .desk-noise{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:var(--noise);background-size:240px;opacity:.22;mix-blend-mode:overlay}
+
+  .journal{position:relative;z-index:1;max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(28px,5vw,58px)}
+
+  .page{
+    position:relative;background:var(--paper);
+    padding:clamp(24px,4.4vw,50px) clamp(20px,4.4vw,50px) clamp(50px,5vw,62px);
+    border-radius:3px;
+    box-shadow:0 1px 0 rgba(255,255,255,.65) inset,0 2px 4px rgba(0,0,0,.28),0 26px 54px -22px rgba(0,0,0,.7);
+    transition:opacity .95s cubic-bezier(.16,1,.3,1), translate .95s cubic-bezier(.16,1,.3,1);
+  }
+  .page::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background-image:var(--noise);background-size:200px;opacity:.12;mix-blend-mode:multiply}
+  .page::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;border-radius:3px 0 0 3px;background:linear-gradient(90deg,rgba(60,40,20,.16),transparent);pointer-events:none}
+
+  .js .page{opacity:0;translate:0 32px}
+  .js .page.in{opacity:1;translate:0 0}
+
+  .label{font-family:var(--sans);font-size:.6rem;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-soft)}
+  .hand{font-family:var(--hand);font-size:1.16rem;line-height:1.35;color:#41503f}
+  .pnum{position:absolute;bottom:18px;right:clamp(20px,4vw,36px);font-family:var(--sans);font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;color:#b3a48c}
+  .rule{height:1px;background:linear-gradient(90deg,var(--ink),transparent);opacity:.25}
+
+  .tape{position:absolute;width:100px;height:28px;z-index:6;background:linear-gradient(180deg,rgba(226,204,158,.85),rgba(208,184,134,.75));box-shadow:0 2px 7px rgba(0,0,0,.16);border-left:1px dashed rgba(255,255,255,.55);border-right:1px dashed rgba(255,255,255,.55);opacity:.92}
+
+  .frame{
+    position:relative;background:#fdfaf2;padding:11px;
+    box-shadow:0 3px 6px rgba(0,0,0,.2),0 18px 34px -16px rgba(0,0,0,.55);
+  }
+  .frame img{display:block;width:100%;height:100%;object-fit:cover}
+  .frame .idx{
+    position:absolute;top:-9px;right:-6px;z-index:7;
+    background:var(--forest);color:#f4ecdc;
+    font-family:var(--sans);font-size:.5rem;font-weight:600;letter-spacing:.16em;
+    padding:4px 8px;border-radius:2px;transform:rotate(3deg);
+    box-shadow:0 3px 8px rgba(0,0,0,.3);
+  }
+
+  .stamp{
+    width:88px;height:88px;border-radius:50%;border:2px dashed rgba(47,68,55,.6);
+    display:grid;place-items:center;text-align:center;transform:rotate(-13deg);
+    color:#3a5244;font-family:var(--sans);font-size:.48rem;font-weight:600;
+    letter-spacing:.2em;text-transform:uppercase;line-height:1.7;
+    box-shadow:inset 0 0 0 1px rgba(47,68,55,.25);
+  }
+  .stamp b{display:block;font-family:var(--serif);font-size:1rem;letter-spacing:.06em;font-weight:600;text-transform:none;line-height:1.1;margin-bottom:3px}
+
+  .ticket{position:relative;background:var(--paper-2);border:1px dashed #c3ae90;border-radius:4px;padding:12px 14px}
+  .ticket .tk-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .ticket .tk-k{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;color:#9c8b73}
+  .ticket .tk-v{font-size:.68rem;font-weight:600;letter-spacing:.05em;color:#43382c;text-transform:uppercase;text-align:right}
+  .ticket .tk-line{height:1px;background:repeating-linear-gradient(90deg,#c9b79a 0 4px,transparent 4px 8px);margin:9px 0}
+
+  /* ---------- COVER ---------- */
+  .cover .label{display:block;text-align:center;letter-spacing:.5em}
+  .cover h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.9rem,11vw,5.2rem);line-height:.92;letter-spacing:-.02em;text-align:center;color:#241f1a;margin:.4em 0 .12em}
+  .cover h1 em{font-style:italic;font-weight:400}
+  .cover .sub{font-family:var(--serif);font-size:clamp(.98rem,2.1vw,1.12rem);font-weight:300;line-height:1.6;font-style:italic;color:#5f564a;text-align:center;max-width:32ch;margin:0 auto 2rem}
+  .cover-grid{display:grid;grid-template-columns:1fr .9fr;gap:clamp(18px,3.6vw,34px);align-items:start}
+  .cover .frame{transform:rotate(-2.2deg)}
+  .cover .frame img{aspect-ratio:3/4}
+  .cover-meta{display:flex;flex-direction:column;gap:14px;padding-top:4px}
+  .cover-meta .stamp{align-self:flex-end;margin-right:4px}
+  .cover-meta .hand{max-width:22ch;font-size:1.12rem;transform:rotate(-.8deg)}
+  .cover-meta .hand::before{content:"“"}
+  .cover-meta .hand::after{content:"”"}
+
+  /* ---------- CHAPTER HEAD ---------- */
+  .phead{margin-bottom:clamp(18px,3vw,26px)}
+  .phead .label{display:block;margin-bottom:7px;color:var(--terra)}
+  .phead h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.8rem,5vw,2.7rem);line-height:1.06;letter-spacing:-.01em;color:#241f1a}
+  .phead h2 em{font-style:italic;color:var(--terra)}
+  .phead .rule{margin-top:13px;max-width:110px}
+
+  /* ---------- CHAPTER BODY ---------- */
+  .ch{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(18px,3.6vw,34px);align-items:start}
+  .ch.flip{grid-template-columns:.96fr 1.04fr}
+  .ch.flip .ph{order:2}
+  .ch .ph{position:relative}
+  .ch .frame img{aspect-ratio:3/4}
+  .ch .txt{display:flex;flex-direction:column;gap:14px;padding-top:6px}
+  .ch .cap{font-family:var(--hand);font-size:1.06rem;color:#5f6b52;transform:rotate(-.8deg)}
+
+  .prose p{font-family:var(--serif);font-size:clamp(1.02rem,2.2vw,1.16rem);line-height:1.75;font-weight:300;color:#3a332b;margin-bottom:.85em}
+  .prose p:last-child{margin-bottom:0}
+  .prose .drop::first-letter{float:left;font-family:var(--serif);font-size:3.4rem;line-height:.82;padding:5px 10px 0 0;color:var(--terra);font-weight:500}
+  .prose em{font-style:italic}
+
+  .margin-note{padding-left:16px;border-left:2px solid rgba(176,96,60,.35);font-family:var(--serif);font-style:italic;font-size:.98rem;line-height:1.6;color:#6a5f51}
+
+  /* wide photo layout */
+  .ch.wide{grid-template-columns:1fr}
+  .ch.wide .frame img{aspect-ratio:4/3}
+  .ch.wide .txt{display:grid;grid-template-columns:1fr .8fr;gap:clamp(16px,3.4vw,30px);align-items:start;padding-top:16px}
+
+  /* ---------- BIRTHDAY PAGE ---------- */
+  .bday{background:linear-gradient(180deg,#f7f0e3,#efe3cd)}
+  .bday .grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(18px,3.6vw,34px);align-items:start}
+  .bday .frame{transform:rotate(1.8deg)}
+  .bday .frame img{aspect-ratio:1/1}
+  .wishes{list-style:none;counter-reset:w;margin-top:6px}
+  .wishes li{counter-increment:w;position:relative;padding:11px 0 11px 44px;border-bottom:1px solid rgba(107,97,86,.16);font-family:var(--serif);font-size:clamp(.98rem,2.2vw,1.1rem);line-height:1.55;color:#39322a}
+  .wishes li:last-child{border-bottom:none}
+  .wishes li::before{content:counter(w,decimal-leading-zero);position:absolute;left:0;top:14px;font-family:var(--sans);font-size:.56rem;font-weight:600;letter-spacing:.16em;color:var(--terra);border-bottom:1px solid rgba(176,96,60,.4);padding-bottom:2px}
+  .wishes li b{font-weight:600;color:#241f1a}
+
+  /* ---------- CLOSING ---------- */
+  .last{background:linear-gradient(180deg,#f7f0e3,#eee2cc)}
+  .last .big{font-family:var(--serif);font-size:clamp(1.8rem,5.6vw,2.9rem);font-weight:400;line-height:1.14;letter-spacing:-.01em;color:#241f1a;max-width:22ch}
+  .last .big em{font-style:italic;color:var(--terra)}
+  .last .hand{font-size:clamp(1.5rem,4.6vw,2.1rem);color:#3a4c3c;margin:24px 0 4px;transform:rotate(-1.6deg)}
+  .last .sign{font-family:var(--sans);font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;color:#9c8d76;margin-top:16px}
+  .last .ps{margin-top:24px;padding-top:16px;border-top:1px dashed rgba(107,97,86,.35);font-family:var(--serif);font-style:italic;font-size:.95rem;color:#6a5f51;line-height:1.65;max-width:44ch}
+
+  /* ================= INTRO: KUE ================= */
+  body.locked{overflow:hidden}
+
+  .intro{
+    display:none;position:fixed;inset:0;z-index:85;place-items:center;overflow:hidden;
+    background:
+      radial-gradient(900px 620px at 50% 26%, #452a4a 0%, rgba(27,21,18,0) 62%),
+      radial-gradient(700px 500px at 50% 100%, #3a2318 0%, rgba(27,21,18,0) 60%),
+      #141010;
+    transition:opacity .9s ease, visibility .9s;
+  }
+  .js .intro{display:grid}
+  .intro.gone{opacity:0;visibility:hidden}
+  .intro::after{content:"";position:absolute;inset:0;background-image:var(--noise);background-size:240px;opacity:.18;mix-blend-mode:overlay;pointer-events:none}
+
+  .intro .inner{position:relative;z-index:2;text-align:center;padding:24px;max-width:560px}
+  .intro .kick{font-size:.58rem;letter-spacing:.46em;text-transform:uppercase;color:var(--gold);opacity:.9;margin-bottom:16px}
+  .intro h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.5rem,9vw,3.9rem);line-height:1;letter-spacing:-.01em;color:#f8eeda}
+  .intro h1 em{font-style:italic;color:var(--gold)}
+  .intro .hint{font-family:var(--hand);font-size:1.24rem;color:#c9b69b;margin-top:12px;transition:opacity .4s}
+  .intro.blown .hint{opacity:0}
+
+  /* ---- cake ---- */
+  .cake{position:relative;width:240px;height:206px;margin:34px auto 0}
+  .plate{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);width:310px;height:26px;border-radius:50%;
+    background:linear-gradient(180deg,#4a3a29 0%,#241b12 45%,#0f0a07 100%);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.14),0 22px 48px -14px #000}
+  .bl{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:240px;height:66px;border-radius:10px 10px 18px 18px;
+    background:linear-gradient(180deg,#6a4270 0%,#4d2f57 40%,#33203a 100%);
+    box-shadow:inset 0 -14px 26px rgba(0,0,0,.4),inset 6px 0 12px rgba(255,255,255,.05)}
+  .fr{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:252px;height:18px;border-radius:10px 10px 5px 5px;
+    background:linear-gradient(180deg,#fffaf0,#e5d3b6);box-shadow:0 3px 9px rgba(0,0,0,.28),inset 0 2px 0 rgba(255,255,255,.7)}
+  .dr{position:absolute;bottom:48px;width:14px;border-radius:0 0 7px 7px;background:#f9f0dd}
+  .dr1{left:52px;height:19px}.dr2{left:104px;height:28px}.dr3{left:158px;height:18px}.dr4{left:206px;height:23px}
+  .tl{position:absolute;bottom:78px;left:50%;transform:translateX(-50%);width:164px;height:44px;border-radius:9px 9px 6px 6px;
+    background:linear-gradient(180deg,#fffdf6 0%,#f1e0c4 70%,#e3cba7 100%);
+    box-shadow:inset 0 4px 0 rgba(255,255,255,.9),inset -16px 0 26px rgba(120,90,50,.10),0 4px 12px rgba(0,0,0,.22)}
+  .cn{position:absolute;bottom:122px;left:50%;transform:translateX(-50%);width:11px;height:52px;border-radius:5px;background:repeating-linear-gradient(45deg,#f5e9d8 0 6px,#e2bda8 6px 12px);box-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .fl{position:absolute;top:-27px;left:50%;width:18px;height:29px;border-radius:50% 50% 50% 50%/66% 66% 34% 34%;transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 80%,#fff8dd,#ffd463 34%,#ff8f3f 68%,#e24d2c);
+    box-shadow:0 0 26px 8px rgba(255,170,70,.55),0 0 70px 26px rgba(255,140,50,.22);
+    transform-origin:50% 100%;animation:flick .6s ease-in-out infinite alternate;transition:opacity .4s,transform .4s}
+  @keyframes flick{from{transform:translateX(-50%) rotate(-4deg) scaleY(.93)}to{transform:translateX(-50%) rotate(4deg) scaleY(1.07)}}
+  .cake.blown .fl{opacity:0;transform:translateX(-50%) scale(.15) translateY(8px)}
+
+  .smoke{position:absolute;left:50%;top:-26px;width:10px;height:10px;border-radius:50%;background:rgba(235,228,220,.6);filter:blur(4px);opacity:0}
+  .cake.blown .smoke{animation:smokeUp 2s ease-out forwards}
+  @keyframes smokeUp{0%{opacity:.65;transform:translate(-50%,0) scale(.5)}100%{opacity:0;transform:translate(-50%,-70px) scale(3)}}
+
+  .blow-btn{
+    margin-top:30px;display:inline-flex;align-items:center;gap:8px;padding:14px 34px;border-radius:999px;border:none;cursor:pointer;
+    font-family:var(--sans);font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#231710;
+    background:linear-gradient(135deg,#f7e6bd,#e8c98a 45%,#c9a45c);
+    box-shadow:0 12px 34px -12px rgba(232,201,138,.8),inset 0 1px 0 rgba(255,255,255,.65);
+    transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s,opacity .3s;
+  }
+  .blow-btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px -14px rgba(232,201,138,.95)}
+  .blow-btn:focus-visible{outline:2px solid #f8eeda;outline-offset:4px}
+  .blow-btn[disabled]{opacity:0;pointer-events:none}
+
+  /* ================= DOOR: BUKU TERBUKA ================= */
+  .door{position:fixed;inset:0;z-index:75;perspective:2600px;opacity:0;pointer-events:none;transition:opacity .5s ease}
+  .door.on{opacity:1}
+  .door-face{
+    position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+    background:linear-gradient(150deg,#f9f2e4,#f0e5d1 55%,#e8dac1);
+    transform-origin:left center;transform:rotateY(0deg);
+    transition:transform 1.55s cubic-bezier(.5,.02,.28,1),box-shadow 1s ease;
+    box-shadow:0 0 0 rgba(0,0,0,0);
+    backface-visibility:hidden;
+  }
+  .door.turn .door-face{transform:rotateY(-118deg);box-shadow:70px 0 90px -40px rgba(0,0,0,.85)}
+  .door-face::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:linear-gradient(90deg,rgba(60,40,20,.22),transparent)}
+  .door-face::after{content:"";position:absolute;inset:0;background-image:var(--noise);background-size:200px;opacity:.14;mix-blend-mode:multiply;pointer-events:none}
+  .d-inner{position:relative;z-index:2;padding:24px}
+  .d-label{font-size:.58rem;font-weight:600;letter-spacing:.5em;text-transform:uppercase;color:var(--ink-soft)}
+  .d-title{font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem,9vw,4rem);line-height:1;letter-spacing:-.02em;color:#241f1a;margin:.42em 0 .2em}
+  .d-title em{font-style:italic}
+  .d-sub{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:#6a5f51}
+  .d-stamp{margin:26px auto 0;width:88px;height:88px;border-radius:50%;border:2px dashed rgba(47,68,55,.55);display:grid;place-items:center;transform:rotate(-11deg);color:#3a5244;font-size:.46rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;line-height:1.7}
+  .d-stamp b{display:block;font-family:var(--serif);font-size:1rem;letter-spacing:.04em;font-weight:600;text-transform:none;line-height:1.1;margin-bottom:2px}
+
+  #cf{position:fixed;inset:0;z-index:90;pointer-events:none}
+
+  .skip{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:none;border:none;color:#8d7f6d;font-family:var(--sans);font-size:.54rem;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;padding:8px 14px;z-index:3;opacity:.7;transition:opacity .2s,color .2s}
+  .skip:hover{opacity:1;color:#cbb9a0}
+
+  .sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+  .sparks i{position:absolute;width:3px;height:3px;border-radius:50%;background:#e8c98a;box-shadow:0 0 10px 2px rgba(232,201,138,.45);animation:twinkle 4.5s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.9;transform:scale(1.2)}}
+
+  .halo{position:absolute;left:50%;bottom:96px;width:260px;height:170px;transform:translateX(-50%);border-radius:50%;
+    background:radial-gradient(ellipse at 50% 70%,rgba(255,178,88,.30),rgba(255,140,60,.10) 45%,transparent 72%);
+    filter:blur(6px);pointer-events:none}
+
+  /* ---------- lightbox ---------- */
+  .lb{position:fixed;inset:0;z-index:50;display:none;place-items:center;padding:24px;background:rgba(18,14,11,.93);backdrop-filter:blur(6px)}
+  .lb.open{display:grid}
+  .lb img{max-width:min(92vw,640px);max-height:86vh;border:8px solid #fdfaf2;box-shadow:0 30px 70px -20px #000}
+  .lb .close{position:absolute;top:16px;right:18px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font-size:1.3rem;line-height:1;cursor:pointer}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:720px){
+    .cover-grid{grid-template-columns:1fr;gap:22px}
+    .cover-meta{align-items:center;text-align:center}
+    .cover-meta .stamp{align-self:center}
+    .ch,.ch.flip{grid-template-columns:1fr}
+    .ch.flip .ph{order:0}
+    .ch.wide .txt{grid-template-columns:1fr}
+    .bday .grid{grid-template-columns:1fr}
+    .bday .frame{max-width:300px;margin:0 auto}
+    .ch .frame img{aspect-ratio:4/5}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .js .page{opacity:1;translate:none}
+  }
+</style>
+</head>
+<body>
+<div class="desk-noise" aria-hidden="true"></div>
+
+<main class="journal">
+
+  <!-- ================= COVER ================= -->
+  <section class="page cover">
+    <span class="tape" style="top:-13px;left:48px;transform:rotate(-7deg)"></span>
+    <span class="tape" style="top:-11px;right:34px;transform:rotate(5deg)"></span>
+
+    <p class="label">Buku Perjalanan</p>
+    <h1>Perjalanan <em>Kita</em></h1>
+    <p class="sub">Tujuh halaman, satu lingkaran kecil yang sampai sekarang belum bubar. Untuk ulang tahun Damaraa.</p>
+
+    <div class="cover-grid">
+      <div class="frame" data-zoom>
+        <span class="idx">FOTO 01</span>
+        <img src="img/01.jpg" alt="Foto bersama di ruangan luas" />
+      </div>
+
+      <div class="cover-meta">
+        <div class="stamp"><span><b>Edisi</b>Ulang Tahun</span></div>
+
+        <div class="ticket">
+          <div class="tk-row"><span class="tk-k">Rute</span><span class="tk-v">Kumpul → Kumpul Lagi</span></div>
+          <div class="tk-line"></div>
+          <div class="tk-row"><span class="tk-k">Penumpang</span><span class="tk-v">Satu Lingkaran</span></div>
+          <div class="tk-line"></div>
+          <div class="tk-row"><span class="tk-k">Status</span><span class="tk-v">Masih Jalan</span></div>
+        </div>
+
+        <p class="hand">nggak ada yang direncanakan — dan itu justru bagian terbaiknya</p>
+      </div>
+    </div>
+
+    <p class="pnum">00 · Sampul</p>
+  </section>
+
+  <!-- ================= 01 ================= -->
+  <section class="page">
+    <header class="phead">
+      <span class="label">Halaman 01</span>
+      <h2>Titik <em>Awal</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="ch">
+      <div class="ph">
+        <div class="frame" data-zoom style="transform:rotate(-1.4deg)">
+          <span class="idx">06</span>
+          <img src="img/06.jpg" alt="Selfie berjejer di depan gedung biru" />
+        </div>
+      </div>
+      <div class="txt">
+        <div class="prose">
+          <p class="drop">Semua dimulai dari foto yang nggak pernah direncanakan. Berdiri berjejer, nggak ada yang tahu harus ngapain — dan justru itu yang bikin fotonya kelihatan jujur.</p>
+          <p>Masih belum saling hafal, masih canggung, masih mikir mau pulang jam berapa. Sekarang mah mikirnya cuma: <em>pulang dulu apa lanjut?</em></p>
+        </div>
+        <p class="cap">foto yang jadi halaman pertama — entah siapa yang motret.</p>
+      </div>
+    </div>
+
+    <p class="pnum">01 · Titik Awal</p>
+  </section>
+
+  <!-- ================= 02 ================= -->
+  <section class="page">
+    <header class="phead">
+      <span class="label">Halaman 02</span>
+      <h2>Di Luar <em>Rutinitas</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="ch wide">
+      <div class="ph">
+        <div class="frame" data-zoom style="transform:rotate(-.7deg)">
+          <span class="idx">02</span>
+          <img src="img/02.jpg" alt="Foto bersama di depan banner TPA Al-Hidayah" />
+        </div>
+      </div>
+      <div class="txt">
+        <div class="prose">
+          <p>Ada hari-hari yang kita habiskan bukan buat diri sendiri. Datang, bantu, duduk bareng, ngakak di belakang banner. Nggak ada yang minta dicatat — tapi justru ini yang paling sering diinget.</p>
+        </div>
+        <p class="cap">banner-nya lebih rapi daripada orang-orangnya.</p>
+      </div>
+    </div>
+
+    <p class="pnum">02 · Di Luar Rutinitas</p>
+  </section>
+
+  <!-- ================= 03 ================= -->
+  <section class="page">
+    <header class="phead">
+      <span class="label">Halaman 03</span>
+      <h2>Ketemu di <em>Layar</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="ch flip">
+      <div class="ph">
+        <div class="frame" data-zoom style="transform:rotate(1.3deg)">
+          <span class="idx">03</span>
+          <img src="img/03.jpg" alt="Tangkapan layar panggilan video Discord dan Roblox" />
+        </div>
+      </div>
+      <div class="txt">
+        <div class="prose">
+          <p>Kalau lagi nggak bisa ketemu, ya ketemu di layar. Roblox, Discord, dan suara yang saling timpa sampai nggak jelas siapa yang ngomong.</p>
+          <p>Buktinya, <strong>46 menit 21 detik</strong> — dan nggak ada satu pun yang keluar.</p>
+        </div>
+        <p class="cap">jarak cuma soal koneksi.</p>
+      </div>
+    </div>
+
+    <p class="pnum">03 · Ketemu di Layar</p>
+  </section>
+
+  <!-- ================= 04 ================= -->
+  <section class="page">
+    <header class="phead">
+      <span class="label">Halaman 04</span>
+      <h2>Meja <em>Panjang</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="ch">
+      <div class="ph">
+        <div class="frame" data-zoom style="transform:rotate(-1.1deg)">
+          <span class="idx">04</span>
+          <img src="img/04.jpg" alt="Nongkrong malam di warung dengan meja panjang" />
+        </div>
+      </div>
+      <div class="txt">
+        <div class="prose">
+          <p class="drop">Meja panjang, cerita lebih panjang. Warung pinggir jalan, rumput hijau, dan satu orang yang selalu pegang kamera dari ujung meja.</p>
+          <p>Jam segini biasanya udah nggak ada yang inget mau pulang — yang ada cuma <em>“pesen lagi nggak?”</em></p>
+        </div>
+        <p class="cap">satu meja, sejuta topik, nol kesimpulan.</p>
+      </div>
+    </div>
+
+    <p class="pnum">04 · Meja Panjang</p>
+  </section>
+
+  <!-- ================= 05 ================= -->
+  <section class="page">
+    <header class="phead">
+      <span class="label">Halaman 05</span>
+      <h2>Es Kopi &amp; <em>Hati Merah</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="ch flip">
+      <div class="ph">
+        <div class="frame" data-zoom style="transform:rotate(1deg)">
+          <span class="idx">05</span>
+          <img src="img/05.jpg" alt="Nongkrong di kafe dengan hiasan hati merah" />
+        </div>
+      </div>
+      <div class="txt">
+        <div class="prose">
+          <p>Tempatnya lebih terang, obrolannya tetap sama. Bedanya cuma di sini ada hati merah besar di dinding — jadi fotonya kelihatan lebih romantis daripada aslinya.</p>
+          <p>Empat gelas, satu meja, nol rencana.</p>
+        </div>
+        <p class="cap">yang penting gelasnya penuh semua.</p>
+      </div>
+    </div>
+
+    <p class="pnum">05 · Es Kopi &amp; Hati Merah</p>
+  </section>
+
+  <!-- ================= 06 ================= -->
+  <section class="page">
+    <header class="phead">
+      <span class="label">Halaman 06</span>
+      <h2>Yang <em>Dicetak</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="ch">
+      <div class="ph">
+        <div class="frame" data-zoom style="transform:rotate(-1.6deg)">
+          <span class="idx">07</span>
+          <img src="img/07.jpg" alt="Photobooth strip bertema Welcome to Indonesia" />
+        </div>
+      </div>
+      <div class="txt">
+        <div class="prose">
+          <p class="drop">Sekarang semua foto ada di galeri, tapi yang dicetak tetap beda. Bisa dipegang, bisa ditempel, bisa ilang di dompet dan ditemuin lagi setahun kemudian.</p>
+          <p>Empat kotak, satu strip panjang, dan muka yang nggak ada satu pun mau difoto serius.</p>
+        </div>
+        <p class="cap">“welcome to indonesia,” kata mesinnya.</p>
+      </div>
+    </div>
+
+    <p class="pnum">06 · Yang Dicetak</p>
+  </section>
+
+  <!-- ================= 07 — BIRTHDAY ================= -->
+  <section class="page bday">
+    <header class="phead">
+      <span class="label">Halaman 07 · Yang Paling Penting</span>
+      <h2>Damaraa<em>.</em></h2>
+      <div class="rule"></div>
+    </header>
+
+    <div class="grid">
+      <div>
+        <div class="frame" data-zoom style="max-width:320px">
+          <span class="idx">08</span>
+          <img src="img/08.jpg" alt="Foto Damaraa" />
+        </div>
+        <p class="cap" style="margin-top:16px;max-width:250px;transform:rotate(-1deg)">satu-satunya yang boleh ulang tahun hari ini.</p>
+      </div>
+      <div>
+        <div class="prose" style="margin-bottom:14px">
+          <p>Dari semua halaman di buku ini, ini yang paling penting. Orang yang ulang tahun hari ini — dan alasan kenapa buku ini dibuat sama sekali.</p>
+        </div>
+        <p class="hand" style="margin-bottom:10px">selamat ulang tahun, ya.</p>
+        <ol class="wishes">
+          <li><b>Sehat</b> yang bukan cuma ada di ucapan.</li>
+          <li><b>Rezeki</b> yang dateng dari arah yang nggak kamu duga.</li>
+          <li><b>Bahagia</b> yang nggak perlu difoto dulu baru dianggap bahagia.</li>
+          <li>Dan semoga kita masih ada di <b>halaman-halaman berikutnya</b>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="pnum">07 · Damaraa</p>
+  </section>
+
+  <!-- ================= CLOSING ================= -->
+  <section class="page last">
+    <span class="tape" style="bottom:-12px;left:42px;transform:rotate(4deg)"></span>
+
+    <p class="label" style="margin-bottom:16px">Halaman Terakhir (untuk sekarang)</p>
+
+    <h2 class="big">Terima kasih sudah ikut <em>sejauh ini</em>.</h2>
+
+    <div class="prose" style="margin-top:18px;max-width:48ch">
+      <p>Ke tempat yang terang, ke warung pinggir jalan, ke dalam layar, ke depan banner — semua tempat jadi enak cuma karena orangnya sama.</p>
+    </div>
+
+    <p class="hand">peluk jauh dari kita semua.</p>
+    <p class="sign">— Dari Sahabatmu</p>
+
+    <p class="ps">Halaman berikutnya masih kosong. Itu bagian paling menyenangkan — kita isi pelan-pelan, ya.</p>
+
+    <p class="pnum">08 · Selesai</p>
+  </section>
+
+</main>
+
+<div class="intro" id="intro">
+  <div class="sparks" aria-hidden="true">
+    <i style="left:14%;top:22%;animation-delay:-.6s"></i>
+    <i style="left:26%;top:64%;animation-delay:-2.1s"></i>
+    <i style="left:72%;top:18%;animation-delay:-1.3s"></i>
+    <i style="left:84%;top:58%;animation-delay:-3.2s"></i>
+    <i style="left:8%;top:44%;animation-delay:-4.1s"></i>
+    <i style="left:62%;top:78%;animation-delay:-2.7s"></i>
+    <i style="left:38%;top:12%;animation-delay:-1.9s"></i>
+    <i style="left:91%;top:36%;animation-delay:-.9s"></i>
+  </div>
+  <div class="inner">
+    <p class="kick">Selamat Ulang Tahun</p>
+    <h1>Damaraa<em>.</em></h1>
+    <p class="hint" id="hint">tiup lilinnya dulu, ya</p>
+
+    <div class="cake" id="cake">
+      <div class="halo"></div>
+      <div class="plate"></div>
+      <div class="bl"></div>
+      <div class="fr"></div>
+      <div class="dr dr1"></div>
+      <div class="dr dr2"></div>
+      <div class="dr dr3"></div>
+      <div class="dr dr4"></div>
+      <div class="tl"></div>
+      <div class="cn"><div class="fl"></div><div class="smoke"></div></div>
+    </div>
+
+    <button class="blow-btn" id="blowBtn" type="button">Tiup Lilin</button>
+    <button class="skip" id="skipBtn" type="button">lewati, langsung buka buku</button>
+  </div>
+</div>
+
+<div class="door" id="door" aria-hidden="true">
+  <div class="door-face">
+    <div class="d-inner">
+      <p class="d-label">Buku Perjalanan</p>
+      <h2 class="d-title">Perjalanan <em>Kita</em></h2>
+      <p class="d-sub">tujuh halaman, satu lingkaran kecil</p>
+      <div class="d-stamp"><span><b>Edisi</b>Ulang Tahun</span></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="cf" aria-hidden="true"></canvas>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Foto">
+  <button class="close" id="lbClose" aria-label="Tutup">×</button>
+  <img id="lbImg" src="" alt="" />
+</div>
+
+<script>
+(function () {
+  document.body.classList.add('js');
+
+  var pages = document.querySelectorAll('.page');
+  var revealed = false;
+
+  function startReveal() {
+    if (revealed) return;
+    revealed = true;
+
+    // halaman yang sudah ada di layar langsung tampil
+    pages.forEach(function (p) {
+      if (p.getBoundingClientRect().top < window.innerHeight * 0.95) p.classList.add('in');
+    });
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.06 });
+      pages.forEach(function (p) { io.observe(p); });
+
+      // jaring pengaman kalau observer tidak jalan
+      window.setTimeout(function () {
+        if (!document.querySelector('.page.in')) {
+          pages.forEach(function (p) { p.classList.add('in'); });
+        }
+      }, 1200);
+    } else {
+      pages.forEach(function (p) { p.classList.add('in'); });
+    }
+  }
+
+  /* ---------- confetti ---------- */
+  var cv = document.getElementById('cf');
+  var ctx = cv.getContext('2d');
+  var W = 0, H = 0, parts = [], raf = null;
+  var COLORS = ['#e8c98a', '#f4e0b6', '#e6a9a0', '#ffffff', '#c9a45c', '#b48fb8'];
+
+  function sizeCanvas() {
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W; cv.height = H;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  function burst(x, y, n, power) {
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var v = (0.35 + Math.random() * 0.9) * power;
+      parts.push({
+        x: x, y: y,
+        vx: Math.cos(a) * v, vy: Math.sin(a) * v - power * 0.4,
+        w: 3 + Math.random() * 6, h: 5 + Math.random() * 9,
+        r: Math.random() * 3, vr: (Math.random() - 0.5) * 0.3,
+        c: COLORS[(Math.random() * COLORS.length) | 0],
+        l: 1, d: 0.005 + Math.random() * 0.007
+      });
+    }
+    if (!raf) raf = requestAnimationFrame(loop);
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.vy += 0.13; p.vx *= 0.995; p.vy *= 0.995;
+      p.x += p.vx; p.y += p.vy; p.r += p.vr; p.l -= p.d;
+      if (p.l <= 0 || p.y > H + 60) { parts.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.l));
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+    if (parts.length) raf = requestAnimationFrame(loop);
+    else { ctx.clearRect(0, 0, W, H); raf = null; }
+  }
+
+  /* ---------- buka buku ---------- */
+  var intro = document.getElementById('intro');
+  var door = document.getElementById('door');
+  var cakeEl = document.getElementById('cake');
+  var blowBtn = document.getElementById('blowBtn');
+  var skipBtn = document.getElementById('skipBtn');
+  var started = false;
+
+  function unlock() {
+    intro.classList.add('gone');
+    door.style.display = 'none';
+    document.body.classList.remove('locked');
+    startReveal();
+  }
+
+  function openBook() {
+    if (started) return;
+    started = true;
+    door.classList.add('on');
+    setTimeout(function () { intro.classList.add('gone'); }, 850);
+    setTimeout(function () { door.classList.add('turn'); }, 1400);
+    setTimeout(function () {
+      door.style.display = 'none';
+      document.body.classList.remove('locked');
+      startReveal();
+    }, 3000);
+  }
+
+  function blow() {
+    if (started) return;
+    cakeEl.classList.add('blown');
+    blowBtn.disabled = true;
+    window.setTimeout(function () {
+      burst(W / 2, H * 0.52, 90, 12);
+      burst(W * 0.18, H * 0.34, 45, 9);
+      burst(W * 0.82, H * 0.34, 45, 9);
+    }, 120);
+    window.setTimeout(function () { burst(W / 2, H * 0.3, 55, 10); }, 520);
+    window.setTimeout(openBook, 900);
+  }
+
+  if (location.hash === '#buku') {
+    door.style.display = 'none';
+    intro.style.display = 'none';
+    document.body.classList.remove('locked');
+    startReveal();
+  } else {
+    document.body.classList.add('locked');
+    blowBtn.addEventListener('click', blow);
+    cakeEl.addEventListener('click', blow);
+    cakeEl.style.cursor = 'pointer';
+    skipBtn.addEventListener('click', unlock);
+  }
+
+  /* ---------- lightbox ---------- */
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lbImg');
+  var close = document.getElementById('lbClose');
+
+  document.querySelectorAll('[data-zoom]').forEach(function (el) {
+    el.style.cursor = 'zoom-in';
+    el.addEventListener('click', function () {
+      var im = el.querySelector('img');
+      if (!im) return;
+      lbImg.src = im.src;
+      lbImg.alt = im.alt || '';
+      lb.classList.add('open');
+    });
+  });
+
+  function shut() { lb.classList.remove('open'); }
+  close.addEventListener('click', shut);
+  lb.addEventListener('click', function (e) { if (e.target === lb) shut(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') shut(); });
+})();
+</script>
+</body>
+</html>
